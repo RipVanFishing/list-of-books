@@ -1,0 +1,12 @@
+.left {
+  width: 40 %;
+  background-color: beige;
+}
+.right {
+  width: 60%;
+  background-color: bisque;
+}
+
+#root {
+  display: flex;
+}
