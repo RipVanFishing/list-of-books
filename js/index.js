@@ -39,6 +39,8 @@ const books = [
 	},
 ];
 
+localStorage.setItem("books",JSON.stringify(books));
+
 const divRef = document.querySelector("#root");
 
 const divLeft = document.createElement("div");
@@ -60,48 +62,46 @@ divLeft.append(titledDivLeftH1,listDivLeft,btnDivLeft);
 
 
 function makeListBooks() {
-    const arrayTitleBooks = books.map(book => `<li> <p class="text-link">${book.title}</p> <button class ="btn-edit" >Edit</button>
+    const books = localStorage.getItem("books");
+    const arrayTitleBooks = JSON.parse(books).map(book => `<li id=${book.id}> <p class="text-link">${book.title}</p> <button class ="btn-edit" >Edit</button>
     <button class = "btn-delete"> Delete</button> </li>`).join('')
-    console.log(books);
+    
 
-    listDivLeft.insertAdjacentHTML("afterbegin", arrayTitleBooks); 
+    listDivLeft.insertAdjacentHTML("afterbegin", arrayTitleBooks);
     
     const btnEdit = document.querySelectorAll(".btn-edit");
     const bntDelete = document.querySelectorAll(".btn-delete");
     const textLink = document.querySelectorAll(".text-link")
-    btnEdit.forEach((btn) => btn.addEventListener("click",handleClickEdit));
+    btnEdit.forEach((btn) => btn.addEventListener("click", handleClickEdit));
     bntDelete.forEach((btn) => btn.addEventListener("click", handleClickDel));
-    textLink.forEach((txt,idx) => txt.addEventListener("click", showPreview));
+    textLink.forEach((txt, idx) => txt.addEventListener("click", showPreview));
 
-    function showPreview(event) {
+}
+
+  function showPreview(event) {
+        const books = JSON.parse(localStorage.getItem("books"));
         const target = event.currentTarget.textContent;
 
         const targetBook = books.find(book => book.title === target);
 
         console.log(targetBook);
-        const previewMarkup =`<h2>${targetBook.title}</h2> <p>${targetBook.author}</p><img src =${targetBook.img}>
+        const previewMarkup = `<h2>${targetBook.title}</h2> <p>${targetBook.author}</p><img src =${targetBook.img}>
          <p>${targetBook.plot}</p> `;
         divRight.innerHTML = "";
         divRight.insertAdjacentHTML("afterbegin", previewMarkup);
        
-        
-        
-        
-    }
-    
-    function handleClickEdit() {
+}
+         
+function handleClickEdit() {
         console.log("Edit");
     }
-    function handleClickDel() {
-        console.log("Delete");
-    }
-
-    
+    function handleClickDel(evt) {
+        const liDelRef = evt.currentTarget.parentNode.id;
+        const allBooks = JSON.parse(localStorage.getItem("books"));
+        const filteredBook = allBooks.filter((book => liDelRef !== book.id));
         
+       localStorage.setItem("books",JSON.stringify(filteredBook));
+     
     };
 
-
-makeListBooks()
-
-
-console.log(listDivLeft);
+    makeListBooks();
